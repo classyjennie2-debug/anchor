@@ -37,7 +37,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">Email</h3>
                   <p className="text-muted-foreground">
-                    support@anchorcapital.com
+                    support@anchorcapital.bond
                   </p>
                 </div>
               </div>
@@ -65,7 +65,11 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-
+              <div className="rounded-xl rounded-2xl border border-border bg-card p-4">
+                <p className="text-sm text-muted-foreground">
+                  Visit us online at <span className="text-foreground">www.anchorcapital.bond</span> or email support@anchorcapital.bond.
+                </p>
+              </div>
           <div className="rounded-2xl border border-border bg-card p-8">
             <h2 className="mb-6 text-2xl font-bold text-foreground">
               Send us a message
