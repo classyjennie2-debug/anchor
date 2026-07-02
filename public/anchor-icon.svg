@@ -1,0 +1,31 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @media (prefers-color-scheme: light) {
+      .background { fill: #000000; }
+      .foreground { fill: #ffffff; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .background { fill: #ffffff; }
+      .foreground { fill: #000000; }
+    }
+  </style>
+  <g clip-path="url(#clip0)">
+    <rect class="background" width="180" height="180" rx="37" />
+    <!-- Anchor Icon - Professional Design -->
+    <g transform="translate(55, 35)">
+      <!-- Ring/Eye -->
+      <circle cx="35" cy="8" r="6.5" class="foreground" fill="none" stroke="currentColor" stroke-width="2"/>
+      <!-- Chain/Rope -->
+      <path class="foreground" d="M35 14 L35 28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Anchor Flukes/Arms -->
+      <path class="foreground" d="M35 28 Q20 35 15 50 M35 28 Q50 35 55 50" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Bottom fluke curve -->
+      <path class="foreground" d="M15 50 Q15 60 22 65 Q35 72 48 65 Q55 60 55 50" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="clip0">
+      <rect width="180" height="180" fill="white" />
+    </clipPath>
+  </defs>
+</svg>

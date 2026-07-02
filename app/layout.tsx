@@ -14,7 +14,7 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: "Vault Invest - Modern Investment Platform",
+  title: "Anchor Capital - Modern Investment Platform",
   description:
     "Grow your wealth with institutional-grade investment strategies. Secure, transparent, and designed for modern investors.",
   generator: "v0.app",

@@ -42,7 +42,7 @@ export const currentUser: User = {
 export const adminUser: User = {
   id: "a1",
   name: "Admin",
-  email: "admin@vaultinvest.com",
+  email: "admin@anchorcapital.com",
   role: "admin",
   balance: 0,
   joinedAt: "2024-01-01",

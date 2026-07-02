@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import {
-  Lock,
   LayoutDashboard,
   History,
   TrendingUp,
@@ -38,10 +38,7 @@ export default function DashboardLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-shrink-0 border-r border-border bg-card lg:flex lg:flex-col">
         <div className="flex h-16 items-center gap-2 border-b border-border px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Lock className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-semibold text-foreground">Vault</span>
+          <Image src="/anchor.svg" alt="Anchor Capital" width={128} height={96} />
         </div>
         <nav className="flex flex-1 flex-col gap-1 p-4">
           {navItems.map((item) => (
@@ -94,10 +91,7 @@ export default function DashboardLayout({
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-border bg-card px-4 lg:hidden">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-              <Lock className="h-3.5 w-3.5 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-foreground">Vault</span>
+            <Image src="/anchor.svg" alt="Anchor Capital" width={112} height={84} />
           </div>
           <Button
             variant="ghost"

@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import {
   ArrowRight,
   Shield,
   TrendingUp,
   BarChart3,
-  Lock,
   ChevronRight,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -45,12 +45,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="fixed top-0 z-50 flex w-full items-center justify-between border-b border-border/50 bg-background/80 px-6 py-4 backdrop-blur-md lg:px-12">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Lock className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-semibold tracking-tight text-foreground">
-            Vault
-          </span>
+          <Image src="/anchor.svg" alt="Anchor Capital" width={128} height={96} />
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           <Link
@@ -249,6 +244,69 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Testimonials */}
+      <section className="px-6 py-20 lg:px-12 lg:py-28 bg-card">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-16 text-center">
+            <p className="mb-3 text-sm font-medium tracking-wider text-accent uppercase">
+              What Our Investors Say
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              <span className="text-balance">
+                Trusted by leading investors worldwide
+              </span>
+            </h2>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                name: "Alexandra Chen",
+                role: "Fund Manager",
+                testimonial:
+                  "Anchor Capital's platform has transformed how we manage our portfolios. The automated execution and risk management tools are industry-leading.",
+                avatar: "AC",
+              },
+              {
+                name: "James Morrison",
+                role: "Investor",
+                testimonial:
+                  "I've been investing for 15 years, and this is the best platform I've used. The returns speak for themselves—12.8% annually on my growth portfolio.",
+                avatar: "JM",
+              },
+              {
+                name: "Sarah Patel",
+                role: "Portfolio Manager",
+                testimonial:
+                  "The institutional-grade strategies combined with the user-friendly interface make this platform perfect for both professionals and newcomers.",
+                avatar: "SP",
+              },
+            ].map((testimonial) => (
+              <div
+                key={testimonial.name}
+                className="rounded-2xl border border-border bg-background p-8"
+              >
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  "{testimonial.testimonial}"
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="px-6 pb-20 lg:px-12 lg:pb-28">
         <div className="mx-auto max-w-3xl rounded-2xl bg-primary p-10 text-center md:p-16">
@@ -258,7 +316,7 @@ export default function LandingPage() {
             </span>
           </h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-primary-foreground/70">
-            Join thousands of investors who trust Vault to manage and grow their
+            Join thousands of investors who trust Anchor Capital to manage and grow their
             portfolios with institutional-grade strategies.
           </p>
           <Button
@@ -276,30 +334,95 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border px-6 py-10 lg:px-12">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 md:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-              <Lock className="h-3.5 w-3.5 text-primary-foreground" />
+      <footer className="border-t border-border px-6 py-16 lg:px-12 bg-card">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-12 md:grid-cols-4 mb-12">
+            {/* Brand */}
+            <div>
+              <div className="mb-4">
+                <Image src="/anchor.svg" alt="Anchor Capital" width={100} height={75} />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Institutional-grade investment platform for everyone.
+              </p>
             </div>
-            <span className="text-sm font-semibold text-foreground">
-              Vault Invest
-            </span>
+
+            {/* Product */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Product</h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="#plans" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Investment Plans
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Dashboard
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Company</h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="/careers" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-4">Legal</h4>
+              <ul className="space-y-3">
+                <li>
+                  <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    Contact Support
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link href="#" className="hover:text-foreground">
-              Terms
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Privacy
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Contact
-            </Link>
+
+          {/* Footer Bottom */}
+          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-muted-foreground">
+              {"© 2026 Anchor Capital. All rights reserved."}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Anchor Capital is a financial platform. Please invest responsibly.
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {"2026 Vault Invest. All rights reserved."}
-          </p>
         </div>
       </footer>
     </div>

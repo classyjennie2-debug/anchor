@@ -1,9 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import {
-  Lock,
   LayoutDashboard,
   Users,
   History,
@@ -39,11 +39,9 @@ export default function AdminLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
         <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
-            <Lock className="h-4 w-4 text-sidebar-primary-foreground" />
-          </div>
+          <Image src="/anchor.svg" alt="Anchor Capital" width={128} height={96} />
           <span className="text-lg font-semibold text-sidebar-foreground">
-            Vault
+            Anchor Capital
           </span>
           <span className="ml-auto rounded-md bg-sidebar-accent px-2 py-0.5 text-[10px] font-medium text-sidebar-accent-foreground">
             Admin
@@ -103,10 +101,7 @@ export default function AdminLayout({
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-border bg-card px-4 lg:hidden">
           <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-              <Lock className="h-3.5 w-3.5 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-foreground">Vault</span>
+            <Image src="/anchor.svg" alt="Anchor Capital" width={112} height={84} />
             <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
               Admin
             </span>

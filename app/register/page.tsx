@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Lock, ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -25,13 +26,13 @@ export default function RegisterPage() {
       <div className="hidden w-1/2 bg-primary lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-12">
         <div className="max-w-sm text-center">
           <div className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5">
-            <Lock className="h-8 w-8 text-primary-foreground" />
+            <Image src="/anchor.svg" alt="Anchor Capital" width={48} height={36} />
           </div>
           <h2 className="text-2xl font-bold text-primary-foreground">
             Start Your Journey
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-primary-foreground/60">
-            Join 50,000+ investors using Vault to build and grow their wealth
+            Join 50,000+ investors using Anchor Capital to build and grow their wealth
             with diversified, institutional-grade strategies.
           </p>
           <div className="mt-10 grid grid-cols-3 gap-4">
@@ -69,16 +70,13 @@ export default function RegisterPage() {
           Back to home
         </Link>
         <div className="flex items-center gap-2 mb-10">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Lock className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="text-lg font-semibold text-foreground">Vault</span>
+          <Image src="/anchor.svg" alt="Anchor Capital" width={128} height={96} />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
           Create your account
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Get started with Vault in under 2 minutes
+          Get started with Anchor Capital in under 2 minutes
         </p>
 
         <form onSubmit={handleRegister} className="mt-8 flex flex-col gap-5">

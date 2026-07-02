@@ -92,7 +92,7 @@ export default function CareersPage() {
               Open roles
             </div>
             <h1 className="mt-8 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Apply for a role at Vault
+              Apply for a role at Anchor Capital
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
               Explore our available positions below. Choose the role that best fits your strengths and submit your application in one professional workflow.
