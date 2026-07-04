@@ -6,8 +6,43 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { investmentPlans } from "@/lib/mock-data"
 import { Shield, TrendingUp, AlertTriangle, Clock, DollarSign } from "lucide-react"
+
+const investmentPlans = [
+  {
+    id: "p1",
+    name: "Conservative Bond Fund",
+    minAmount: 1000,
+    maxAmount: 100000,
+    returnRate: 6.5,
+    duration: "12 months",
+    risk: "Low",
+    description:
+      "A stable, low-risk fund investing primarily in government and corporate bonds. Ideal for capital preservation with steady returns.",
+  },
+  {
+    id: "p2",
+    name: "Growth Portfolio",
+    minAmount: 5000,
+    maxAmount: 500000,
+    returnRate: 12.8,
+    duration: "6 months",
+    risk: "Medium",
+    description:
+      "A balanced portfolio combining equities and fixed income for moderate growth. Designed for investors seeking higher returns with manageable risk.",
+  },
+  {
+    id: "p3",
+    name: "High Yield Equity Fund",
+    minAmount: 10000,
+    maxAmount: 1000000,
+    returnRate: 22.5,
+    duration: "3 months",
+    risk: "High",
+    description:
+      "An aggressive equity fund targeting high-growth sectors. Suitable for experienced investors with higher risk tolerance.",
+  },
+]
 
 const riskConfig = {
   Low: {

@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
+export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
+
 const SMTP_HOST = process.env.SMTP_HOST
 const SMTP_PORT = Number(process.env.SMTP_PORT || 587)
 const SMTP_USER = process.env.SMTP_USER
 const SMTP_PASS = process.env.SMTP_PASS
 const RECEIVER_EMAIL = process.env.CAREERS_RECEIVER_EMAIL
 const SENDER_EMAIL = process.env.CAREERS_SENDER_EMAIL || SMTP_USER
+
+function isEmailConfigured() {
+  return Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS && RECEIVER_EMAIL)
+}
 
 async function sendEmail(data: {
   name: string
@@ -17,10 +24,13 @@ async function sendEmail(data: {
   coverLetter: string
   cvFile?: File
 }) {
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !RECEIVER_EMAIL) {
-    throw new Error(
-      "Email service is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and CAREERS_RECEIVER_EMAIL.",
-    )
+  if (!isEmailConfigured()) {
+    console.info("Careers application received; email delivery skipped because SMTP is not configured.", {
+      name: data.name,
+      email: data.email,
+      position: data.position,
+    })
+    return
   }
 
   const transporter = nodemailer.createTransport({
@@ -90,7 +100,12 @@ export async function POST(request: Request) {
       cvFile: cvFile ?? undefined,
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({
+      success: true,
+      message: isEmailConfigured()
+        ? "Application received. Our team will follow up shortly."
+        : "Application received. Configure SMTP environment variables to send email notifications.",
+    })
   } catch (error) {
     console.error(error)
     return NextResponse.json(

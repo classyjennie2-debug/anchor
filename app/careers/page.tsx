@@ -56,13 +56,14 @@ export default function CareersPage() {
         body: data,
       })
 
+      const payload = await response.json().catch(() => ({}))
+
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error?.error || "Unable to submit application")
+        throw new Error(payload?.error || "Unable to submit application")
       }
 
       setStatus("success")
-      // redirect to the confirmation page
+      setStatusMessage(payload?.message || "Application submitted successfully.")
       router.push("/careers/thank-you")
     } catch (error) {
       setStatus("error")

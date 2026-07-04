@@ -1,14 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
-import {
-  type CoinType,
-  type NetworkType,
-  type WalletAddress,
-  coinNetworks,
-  coinDetails,
-  initialWalletAddresses,
-} from "@/lib/mock-data"
+import { useState, useEffect } from "react"
 import { CoinIcon } from "@/components/crypto/coin-icon"
 import {
   Card,
@@ -22,7 +14,36 @@ import { Badge } from "@/components/ui/badge"
 import { Copy, Check, Loader2, AlertCircle, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
+export type CoinType = "USDT" | "BTC" | "ETH" | "BNB" | "TRX" | "SOL"
+export type NetworkType = "TRC20" | "ERC20" | "BEP20" | "USDT0" | "BTC" | "SOL"
+export type WalletAddress = {
+  id: string
+  coin: CoinType
+  network: NetworkType
+  address: string
+  assignedAt: string | null
+  createdAt: string
+}
+
 const coins: CoinType[] = ["USDT", "BTC", "ETH", "BNB", "TRX", "SOL"]
+
+const coinNetworks: Record<CoinType, NetworkType[]> = {
+  USDT: ["TRC20", "ERC20", "BEP20", "USDT0"],
+  BTC: ["BTC"],
+  ETH: ["ERC20"],
+  BNB: ["BEP20"],
+  TRX: ["TRC20"],
+  SOL: ["SOL"],
+}
+
+const coinDetails: Record<CoinType, { name: string; color: string; bgColor: string }> = {
+  USDT: { name: "Tether", color: "#26A17B", bgColor: "rgba(38,161,123,0.12)" },
+  BTC: { name: "Bitcoin", color: "#F7931A", bgColor: "rgba(247,147,26,0.12)" },
+  ETH: { name: "Ethereum", color: "#627EEA", bgColor: "rgba(98,126,234,0.12)" },
+  BNB: { name: "BNB", color: "#F3BA2F", bgColor: "rgba(243,186,47,0.12)" },
+  TRX: { name: "Tron", color: "#FF0013", bgColor: "rgba(255,0,19,0.12)" },
+  SOL: { name: "Solana", color: "#9945FF", bgColor: "rgba(153,69,255,0.12)" },
+}
 
 const networkLabels: Partial<Record<string, string>> = {
   BEP20: "BEP20 (BSC)",
@@ -42,22 +63,23 @@ export default function DepositPage() {
   )
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [walletPool, setWalletPool] = useState<WalletAddress[]>(() => {
-    if (typeof window !== "undefined") {
-      const version = localStorage.getItem("vault_wallet_version")
-      if (version === "2") {
-        const stored = localStorage.getItem("vault_wallet_pool")
-        if (stored) return JSON.parse(stored)
-      }
-      localStorage.setItem("vault_wallet_version", "2")
-    }
-    return initialWalletAddresses
-  })
 
-  // Sync wallet pool to localStorage for cross-page state
   useEffect(() => {
-    localStorage.setItem("vault_wallet_pool", JSON.stringify(walletPool))
-  }, [walletPool])
+    async function loadAssignedWallet() {
+      try {
+        const res = await fetch("/api/wallets/assigned")
+        if (!res.ok) return
+        const data = await res.json()
+        if (data.wallet) {
+          setAssignedWallet(data.wallet)
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    loadAssignedWallet()
+  }, [])
 
   const handleCoinSelect = (coin: CoinType) => {
     setSelectedCoin(coin)
@@ -72,49 +94,34 @@ export default function DepositPage() {
     setError(null)
   }
 
-  const handleGenerateAddress = useCallback(() => {
+  const handleGenerateAddress = async () => {
     if (!selectedCoin || !selectedNetwork) return
 
     setIsGenerating(true)
     setError(null)
 
-    // Simulate 5 second loading
-    setTimeout(() => {
-      const available = walletPool.find(
-        (w) =>
-          w.coin === selectedCoin &&
-          w.network === selectedNetwork &&
-          w.assignedTo === null
-      )
+    try {
+      const res = await fetch("/api/wallets/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coin: selectedCoin, network: selectedNetwork }),
+      })
 
-      if (!available) {
-        setError(
-          `No available ${selectedCoin} addresses on ${selectedNetwork}. Please try a different network or contact support.`
-        )
-        setIsGenerating(false)
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.message || "Unable to generate address.")
         return
       }
 
-      // Assign the wallet
-      const updated = walletPool.map((w) =>
-        w.id === available.id
-          ? {
-              ...w,
-              assignedTo: "u1",
-              assignedAt: new Date().toISOString().split("T")[0],
-            }
-          : w
-      )
-
-      setWalletPool(updated)
-      setAssignedWallet({
-        ...available,
-        assignedTo: "u1",
-        assignedAt: new Date().toISOString().split("T")[0],
-      })
+      setAssignedWallet(data.wallet)
+    } catch (err) {
+      setError("Unable to connect to the server. Please try again.")
+    } finally {
       setIsGenerating(false)
-    }, 5000)
-  }, [selectedCoin, selectedNetwork, walletPool])
+    }
+  }
 
   const handleCopy = async () => {
     if (!assignedWallet) return

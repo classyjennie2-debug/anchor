@@ -14,10 +14,33 @@ export default function RegisterPage() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
-    router.push("/dashboard")
+    setError("")
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      })
+      const data = await res.json()
+      setLoading(false)
+
+      if (!res.ok) {
+        setError(data?.message || "Unable to register.")
+        return
+      }
+
+      router.push("/dashboard")
+    } catch (err) {
+      setLoading(false)
+      setError("Network error")
+    }
   }
 
   return (
@@ -32,31 +55,9 @@ export default function RegisterPage() {
             Start Your Journey
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-primary-foreground/60">
-            Join 50,000+ investors using Anchor Capital to build and grow their wealth
-            with diversified, institutional-grade strategies.
+            Join investors using Anchor Capital to build and grow their wealth with
+            real account access and secure credentials.
           </p>
-          <div className="mt-10 grid grid-cols-3 gap-4">
-            <div className="rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 p-4">
-              <p className="text-xl font-bold text-primary-foreground">6.5%</p>
-              <p className="mt-1 text-xs text-primary-foreground/50">
-                Conservative
-              </p>
-            </div>
-            <div className="rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 p-4">
-              <p className="text-xl font-bold text-primary-foreground">
-                12.8%
-              </p>
-              <p className="mt-1 text-xs text-primary-foreground/50">Growth</p>
-            </div>
-            <div className="rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 p-4">
-              <p className="text-xl font-bold text-primary-foreground">
-                22.5%
-              </p>
-              <p className="mt-1 text-xs text-primary-foreground/50">
-                High Yield
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -76,7 +77,7 @@ export default function RegisterPage() {
           Create your account
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Get started with Anchor Capital in under 2 minutes
+          Register with credentials stored securely in the database.
         </p>
 
         <form onSubmit={handleRegister} className="mt-8 flex flex-col gap-5">
@@ -115,10 +116,14 @@ export default function RegisterPage() {
               Must be at least 8 characters
             </p>
           </div>
-          <Button type="submit" size="lg" className="mt-2 w-full">
-            Create Account
+          <Button type="submit" size="lg" className="mt-2 w-full" disabled={loading}>
+            {loading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
+
+        {error && (
+          <p className="mt-4 text-center text-sm text-red-500">{error}</p>
+        )}
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}

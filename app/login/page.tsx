@@ -13,13 +13,33 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    if (email.includes("admin")) {
-      router.push("/admin")
-    } else {
-      router.push("/dashboard")
+    setError("")
+    setLoading(true)
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      const data = await res.json()
+      setLoading(false)
+      if (!res.ok) {
+        setError(data?.message || 'Login failed')
+        return
+      }
+      if (data?.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/dashboard')
+      }
+    } catch (err) {
+      setLoading(false)
+      setError('Network error')
     }
   }
 
@@ -45,6 +65,9 @@ export default function LoginPage() {
         </p>
 
         <form onSubmit={handleLogin} className="mt-8 flex flex-col gap-5">
+          <div className="flex items-center justify-center">
+            <div className="text-sm text-muted-foreground">This site requires server-side authentication using your database. Client-side shortcuts are disabled.</div>
+          </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -89,9 +112,9 @@ export default function LoginPage() {
             Create one
           </Link>
         </p>
-        <p className="mt-4 text-center text-xs text-muted-foreground/60">
-          Tip: Use &quot;admin&quot; in email to access admin dashboard
-        </p>
+        {error && (
+          <p className="mt-4 text-center text-sm text-red-500">{error}</p>
+        )}
       </div>
 
       {/* Right: visual panel */}

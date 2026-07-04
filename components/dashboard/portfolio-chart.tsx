@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { portfolioData } from "@/lib/mock-data"
 import {
   Area,
   AreaChart,
@@ -17,6 +16,15 @@ import {
   YAxis,
 } from "recharts"
 
+const portfolioData = [
+  { month: "Sep", value: 32000 },
+  { month: "Oct", value: 35400 },
+  { month: "Nov", value: 33800 },
+  { month: "Dec", value: 38200 },
+  { month: "Jan", value: 42100 },
+  { month: "Feb", value: 48250 },
+]
+
 export function PortfolioChart() {
   return (
     <Card>
@@ -26,9 +34,7 @@ export function PortfolioChart() {
         </CardTitle>
         <p className="text-2xl font-bold text-card-foreground">
           $48,250.75
-          <span className="ml-2 text-sm font-normal text-accent">
-            +50.8%
-          </span>
+          <span className="ml-2 text-sm font-normal text-accent">+50.8%</span>
         </p>
       </CardHeader>
       <CardContent>

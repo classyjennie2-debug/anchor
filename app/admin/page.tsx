@@ -1,52 +1,54 @@
+import { prisma } from "@/lib/db"
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { allUsers, transactions } from "@/lib/mock-data"
-import { Users, DollarSign, Clock, TrendingUp } from "lucide-react"
+import { Users, DollarSign, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 
-export default function AdminOverviewPage() {
-  const totalBalance = allUsers.reduce((sum, u) => sum + u.balance, 0)
-  const pendingTx = transactions.filter((t) => t.status === "pending")
-  const pendingAmount = pendingTx.reduce((sum, t) => sum + t.amount, 0)
-  const approvedTx = transactions.filter((t) => t.status === "approved")
-  const approvedVolume = approvedTx.reduce((sum, t) => sum + t.amount, 0)
+export default async function AdminOverviewPage() {
+  const users = await prisma.user.findMany({
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      balance: true,
+      createdAt: true,
+    },
+  })
+
+  const totalUsers = users.length
+  const totalBalance = users.reduce((sum, user) => sum + user.balance, 0)
+  const adminCount = users.filter((user) => user.role === "admin").length
 
   const stats = [
     {
       label: "Total Users",
-      value: allUsers.length.toString(),
+      value: totalUsers.toString(),
       icon: Users,
       color: "text-foreground",
       bg: "bg-secondary",
       href: "/admin/users",
     },
     {
-      label: "Total AUM",
-      value: `$${(totalBalance / 1000).toFixed(0)}k`,
-      icon: DollarSign,
+      label: "Admin Accounts",
+      value: adminCount.toString(),
+      icon: ShieldCheck,
       color: "text-accent",
       bg: "bg-accent/10",
       href: "/admin/users",
     },
     {
-      label: "Pending Transactions",
-      value: pendingTx.length.toString(),
-      icon: Clock,
-      color: "text-warning",
-      bg: "bg-warning/10",
-      href: "/admin/transactions",
-    },
-    {
-      label: "Approved Volume",
-      value: `$${(approvedVolume / 1000).toFixed(0)}k`,
-      icon: TrendingUp,
-      color: "text-accent",
-      bg: "bg-accent/10",
-      href: "/admin/transactions",
+      label: "Total AUM",
+      value: `$${(totalBalance / 1000).toFixed(0)}k`,
+      icon: DollarSign,
+      color: "text-foreground",
+      bg: "bg-secondary/10",
+      href: "/admin/users",
     },
   ]
 
@@ -68,16 +70,12 @@ export default function AdminOverviewPage() {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground">
-                      {stat.label}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
                     <p className="mt-1 text-2xl font-bold text-card-foreground">
                       {stat.value}
                     </p>
                   </div>
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.bg}`}
-                  >
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.bg}`}>
                     <stat.icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
                 </div>
@@ -87,77 +85,46 @@ export default function AdminOverviewPage() {
         ))}
       </div>
 
-      {/* Pending transactions preview */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base text-foreground">
-            Pending Approvals
-          </CardTitle>
-          <Link
-            href="/admin/transactions"
-            className="text-xs text-accent hover:underline"
-          >
+          <CardTitle className="text-base text-foreground">Recent Users</CardTitle>
+          <Link href="/admin/users" className="text-xs text-accent hover:underline">
             View all
           </Link>
         </CardHeader>
         <CardContent>
-          {pendingTx.length === 0 ? (
-            <p className="py-6 text-center text-sm text-muted-foreground">
-              No pending transactions.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {pendingTx.slice(0, 5).map((tx) => {
-                const user = allUsers.find((u) => u.id === tx.userId)
-                return (
-                  <div
-                    key={tx.id}
-                    className="flex items-center justify-between rounded-lg border border-border p-4"
-                  >
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-card-foreground">
-                        {tx.description}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {user?.name} &middot; {tx.date}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-card-foreground">
-                        ${tx.amount.toLocaleString()}
-                      </p>
-                      <p className="text-[10px] uppercase tracking-wider text-warning">
-                        {tx.type}
-                      </p>
-                    </div>
+          <div className="flex flex-col gap-3">
+            {users.length === 0 ? (
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                No users are available.
+              </p>
+            ) : (
+              users.slice(0, 5).map((user) => (
+                <div
+                  key={user.id}
+                  className="flex flex-col gap-3 rounded-lg border border-border p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-card-foreground">{user.name}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
-                )
-              })}
-            </div>
-          )}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-secondary px-2 py-1 text-[11px] uppercase text-muted-foreground">
+                      {user.role}
+                    </span>
+                    <span className="text-sm font-semibold text-card-foreground">
+                      ${user.balance.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </CardContent>
       </Card>
+    </div>
+  )
 
-      {/* Recent users */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base text-foreground">
-            Platform Users
-          </CardTitle>
-          <Link
-            href="/admin/users"
-            className="text-xs text-accent hover:underline"
-          >
-            Manage users
-          </Link>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-3">
-            {allUsers.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center justify-between rounded-lg border border-border p-4"
-              >
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-xs font-medium text-foreground">
                     {user.avatar}
