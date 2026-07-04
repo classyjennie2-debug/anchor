@@ -48,17 +48,74 @@ function getCookieValue(name: string) {
     return cookieStore.get(name)?.value ?? null
   }
 
-  const rawCookie = headers().get("cookie")
+  if (typeof cookieStore.getAll === "function") {
+    const items = cookieStore.getAll()
+    if (Array.isArray(items)) {
+      const item = items.find((cookie: any) => cookie?.name === name)
+      return item?.value ?? null
+    }
+  }
+
+  if (typeof cookieStore.toString === "function") {
+    const cookieString = cookieStore.toString()
+    const parsed = parseCookieHeader(cookieString)
+    return parsed.get(name) ?? null
+  }
+
+  const rawCookie = getRawCookieHeader()
   if (!rawCookie) return null
 
-  const cookiesMap = new Map(
-    rawCookie.split(";").map((cookie) => {
+  const cookiesMap = parseCookieHeader(rawCookie)
+  return cookiesMap.get(name) ?? null
+}
+
+function getRawCookieHeader() {
+  const headersStore = headers()
+  if (!headersStore) return null
+
+  if (typeof headersStore.get === "function") {
+    return headersStore.get("cookie") ?? null
+  }
+
+  if (typeof headersStore.getAll === "function") {
+    const value = headersStore.getAll("cookie")
+    if (Array.isArray(value)) {
+      return value.join("; ")
+    }
+    return typeof value === "string" ? value : null
+  }
+
+  if (typeof headersStore.cookie === "string") {
+    return headersStore.cookie
+  }
+
+  if (typeof headersStore.Cookie === "string") {
+    return headersStore.Cookie
+  }
+
+  if (typeof headersStore.entries === "function") {
+    for (const entry of headersStore.entries()) {
+      const [key, value] = Array.isArray(entry) ? entry : []
+      if (typeof key === "string" && key.toLowerCase() === "cookie") {
+        return String(value)
+      }
+    }
+  }
+
+  if (headersStore.request?.headers) {
+    return headersStore.request.headers.cookie ?? null
+  }
+
+  return null
+}
+
+function parseCookieHeader(cookieHeader: string) {
+  return new Map(
+    cookieHeader.split(";").map((cookie) => {
       const [key, ...rest] = cookie.split("=")
       return [key.trim(), rest.join("=").trim()]
     }),
   )
-
-  return cookiesMap.get(name) ?? null
 }
 
 export function getSession() {

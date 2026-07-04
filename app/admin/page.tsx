@@ -124,28 +124,4 @@ export default async function AdminOverviewPage() {
       </Card>
     </div>
   )
-
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-xs font-medium text-foreground">
-                    {user.avatar}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-card-foreground">
-                      {user.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm font-bold text-card-foreground">
-                  ${user.balance.toLocaleString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
 }
